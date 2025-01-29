@@ -25,5 +25,5 @@ output "configure_kubectl" {
 
 output "worker_node_iam_role" {
   description = "IAM role name for worker nodes"
-  value       = module.eks.eks_managed_node_groups["default"].iam_role_name
+  value       = module.eks.eks_managed_node_groups["yuri-worker-node"].iam_role_name
 }
