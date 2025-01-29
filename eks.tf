@@ -1,9 +1,9 @@
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
-  version = var.eks_module_version
+  version = "20.33.1"
   
   cluster_name    = "yuri-${var.environment}-cluster"
-  cluster_version = var.eks_version
+  cluster_version = "1.32"
   
   vpc_id     = module.vpc.vpc_id
   subnet_ids = module.vpc.private_subnets
