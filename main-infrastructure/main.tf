@@ -1,11 +1,18 @@
 provider "aws" {
-  region = "us-east-1"
+  region = var.region
+  
+  default_tags {
+    tags = {
+      Environment = var.environment
+      Terraform   = "true"
+    }
+  }
 }
 
 terraform {
   backend "s3" {
     bucket         = "yuri-tf-state-bucket"
-    key            = "dev/terraform.tfstate"
+    key            = "main/${var.environment}/terraform.tfstate"
     region         = "us-east-1"
     dynamodb_table = "yuri-terraform-locks"
     encrypt        = true

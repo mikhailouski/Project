@@ -20,7 +20,7 @@ output "ecr_repository_url" {
 
 output "configure_kubectl" {
   description = "Command to configure kubectl access"
-  value       = "aws eks --region us-east-1 update-kubeconfig --name ${module.eks.cluster_name}"
+  value       = "aws eks --region ${var.region} update-kubeconfig --name ${module.eks.cluster_name}"
 }
 
 output "worker_node_iam_role" {
