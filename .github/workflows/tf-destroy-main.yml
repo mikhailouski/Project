@@ -1,4 +1,4 @@
-name: Destroy Main Infra
+name: Destroy Main Infrastructure
 on:
   workflow_dispatch:
     inputs:
@@ -28,8 +28,8 @@ jobs:
         role-to-assume: ${{ vars.AWS_ROLE_ARN }}
         aws-region: ${{ vars.AWS_REGION}}
 
-    - name: Destroy Main Infra
+    - name: Destroy Main Infrastructure
       run: |
-        cd main-infra
+        cd main-infrastructure
         terraform init
         terraform destroy -auto-approve

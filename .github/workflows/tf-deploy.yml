@@ -1,13 +1,8 @@
-name: Main Infrastructure Deploy
+name: Deploy Main Infrastructure
 on:
   push:
     branches: [ dev ]
   workflow_dispatch: 
-    inputs:
-      action:
-        description: 'Action to perform'
-        required: true
-        default: 'plan'
 
 env:
   AWS_REGION: ${{ vars.AWS_REGION}}
@@ -53,7 +48,3 @@ jobs:
     - name: Terraform Apply
       if: github.ref == 'refs/heads/dev' && github.event_name == 'push'
       run: terraform apply -auto-approve -input=false
-
-    - name: Terraform Destroy
-      if: github.event_name == 'workflow_dispatch' && github.event.inputs.action == 'destroy'
-      run: terraform destroy -auto-approve
