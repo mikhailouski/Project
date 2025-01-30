@@ -7,6 +7,7 @@ on:
 env:
   AWS_REGION: ${{ vars.AWS_REGION}}
   AWS_ROLE_ARN: ${{ vars.AWS_ROLE_ARN }}
+  WORKING_DIRECTORY: ./main-infrastructure
 
 jobs:
   terraform:
@@ -38,16 +39,16 @@ jobs:
     
     - name: Terraform Init
       run: terraform init
-      working-directory: ./main-infrastructure
+      working-directory: ${{ env.WORKING_DIRECTORY }}
     
     - name: Terraform Validate
       run: terraform validate   
 
     - name: Terraform Plan
       run: terraform plan -input=false
-      working-directory: ./main-infrastructure
+      working-directory: ${{ env.WORKING_DIRECTORY }}
     
     - name: Terraform Apply
 #      if: github.ref == 'refs/heads/dev' && github.event_name == 'push'
       run: terraform apply -auto-approve -input=false
-      working-directory: ./main-infrastructure
+      working-directory: ${{ env.WORKING_DIRECTORY }}
