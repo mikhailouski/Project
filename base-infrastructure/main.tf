@@ -30,12 +30,13 @@ resource "aws_iam_role" "github_actions_yuri" {
     Statement = [{
       Effect = "Allow"
       Principal = {
-        Federated = "arn:aws:iam::443370672158:oidc-provider/token.actions.githubusercontent.com"
+        Federated = data.aws_iam_openid_connect_provider.github.arn
       }
       Action = "sts:AssumeRoleWithWebIdentity"
       Condition = {
         StringLike = {
           "token.actions.githubusercontent.com:sub" = "repo:mikhailouski/project:*"
+          "token.actions.githubusercontent.com:aud" = "sts.amazonaws.com"
         }
       }
     }]
@@ -52,8 +53,13 @@ resource "aws_iam_role_policy" "terraform_access" {
       {
         Effect = "Allow"
         Action = [
-          "s3:*",
-          "dynamodb:*",
+          "s3:ListBucket",
+          "s3:GetObject",
+          "s3:PutObject",
+          "s3:DeleteObject",
+          "dynamodb:GetItem",
+          "dynamodb:PutItem",
+          "dynamodb:DeleteItem",
           "eks:*",
           "ecr:*",
           "iam:*",
