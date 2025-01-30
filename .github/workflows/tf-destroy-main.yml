@@ -28,6 +28,11 @@ jobs:
         role-to-assume: ${{ vars.AWS_ROLE_ARN }}
         aws-region: ${{ vars.AWS_REGION}}
 
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+      with:
+        terraform_version: 1.10.5
+
     - name: Destroy Main Infrastructure
       run: |
         cd main-infrastructure

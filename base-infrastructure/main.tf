@@ -1,5 +1,6 @@
 terraform {
   required_version = ">= 1.10.5"
+  backend "local" {}
 }
 
 provider "aws" {
@@ -62,17 +63,71 @@ resource "aws_iam_role_policy" "terraform_access" {
           "s3:DeleteObject",
           "dynamodb:GetItem",
           "dynamodb:PutItem",
-          "dynamodb:DeleteItem",
-          "eks:*",
+          "dynamodb:DeleteItem",          
           "ecr:*",
           "iam:*",
           "vpc:*"
+        ]
+        Resource = "*"
+      },
+      # Для KMS
+      {
+        Effect = "Allow"
+        Action = [
+          "kms:CreateKey",
+          "kms:TagResource",
+          "kms:DescribeKey",
+          "kms:ScheduleKeyDeletion"
+        ]
+        Resource = "*"
+      },
+      
+      # Для CloudWatch Logs
+      {
+        Effect = "Allow"
+        Action = [
+          "logs:CreateLogGroup",
+          "logs:PutLogEvents",
+          "logs:DescribeLogGroups"
+        ]
+        Resource = "arn:aws:logs:*:*:log-group:/aws/eks/*"
+      },
+      
+      # Для EC2/VPC
+      {
+        Effect = "Allow"
+        Action = [
+          "ec2:CreateVpc",
+          "ec2:DeleteVpc",
+          "ec2:DescribeVpcs",
+          "ec2:CreateSubnet",
+          "ec2:DeleteSubnet",
+          "ec2:DescribeSubnets",
+          "ec2:CreateInternetGateway",
+          "ec2:AttachInternetGateway",
+          "ec2:CreateRouteTable",
+          "ec2:CreateRoute",
+          "ec2:AssociateRouteTable"
+        ]
+        Resource = "*"
+      },
+      
+      # Для EKS
+      {
+        Effect = "Allow"
+        Action = [
+          "eks:CreateCluster",
+          "eks:DeleteCluster",
+          "eks:DescribeCluster",
+          "eks:ListClusters"
         ]
         Resource = "*"
       }
     ]
   })
 }
+
+
 
 output "role_arn" {
   value = aws_iam_role.github_actions.arn
