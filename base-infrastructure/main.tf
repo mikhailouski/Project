@@ -1,6 +1,5 @@
 terraform {
-  required_version = ">= 1.10.5"
-  backend "local" {} # Using local state file initially
+  required_version = ">= 1.10.5"  
 }
 
 provider "aws" {
