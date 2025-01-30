@@ -48,6 +48,6 @@ jobs:
       working-directory: ./main-infrastructure
     
     - name: Terraform Apply
-      if: github.ref == 'refs/heads/dev' && github.event_name == 'push'
+#      if: github.ref == 'refs/heads/dev' && github.event_name == 'push'
       run: terraform apply -auto-approve -input=false
       working-directory: ./main-infrastructure

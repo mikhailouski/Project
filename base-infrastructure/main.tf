@@ -50,7 +50,6 @@ resource "aws_iam_role" "github_actions" {
 resource "aws_iam_role_policy" "terraform_access" {
   name = "terraform-state-access"
   role = aws_iam_role.github_actions.id
-
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -66,7 +65,8 @@ resource "aws_iam_role_policy" "terraform_access" {
           "dynamodb:DeleteItem",          
           "ecr:*",
           "iam:*",
-          "vpc:*",          
+          "vpc:*",
+          "ec2:*",
         ]
         Resource = "*"
       },
@@ -74,11 +74,7 @@ resource "aws_iam_role_policy" "terraform_access" {
       {
         Effect = "Allow"
         Action = [
-          "kms:CreateKey",
-          "kms:TagResource",
-          "kms:DescribeKey",
-          "kms:ScheduleKeyDeletion",
-          "kms:CreateAlias",
+          "kms:*",
         ]
         Resource = "*"
       },
@@ -87,42 +83,16 @@ resource "aws_iam_role_policy" "terraform_access" {
       {
         Effect = "Allow"
         Action = [
-          "logs:CreateLogGroup",
-          "logs:PutLogEvents",
-          "logs:DescribeLogGroups",
-          "logs:TagResource",
+          "logs:*",
         ]
         Resource = "arn:aws:logs:*:*:log-group:/aws/eks/*"
-      },
-      
-      # Для EC2/VPC
-      {
-        Effect = "Allow"
-        Action = [
-          "ec2:CreateVpc",
-          "ec2:DeleteVpc",
-          "ec2:DescribeVpcs",
-          "ec2:CreateSubnet",
-          "ec2:DeleteSubnet",
-          "ec2:DescribeSubnets",
-          "ec2:CreateInternetGateway",
-          "ec2:AttachInternetGateway",
-          "ec2:CreateRouteTable",
-          "ec2:CreateRoute",
-          "ec2:AssociateRouteTable",
-          "ec2:CreateTags",
-        ]
-        Resource = "*"
       },
       
       # Для EKS
       {
         Effect = "Allow"
         Action = [
-          "eks:CreateCluster",
-          "eks:DeleteCluster",
-          "eks:DescribeCluster",
-          "eks:ListClusters"
+          "eks:*",
         ]
         Resource = "*"
       }
