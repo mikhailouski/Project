@@ -1,0 +1,82 @@
+data "aws_iam_openid_connect_provider" "github" {
+  url = "https://token.actions.githubusercontent.com"
+}
+
+resource "aws_iam_role" "github_actions" {
+  name = "github-actions-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Effect = "Allow"
+      Principal = {
+        Federated = data.aws_iam_openid_connect_provider.github.arn
+      }
+      Action = "sts:AssumeRoleWithWebIdentity"
+      Condition = {
+        StringLike = {
+          "token.actions.githubusercontent.com:sub" = "repo:mikhailouski/Project:*"
+          "token.actions.githubusercontent.com:aud" = "sts.amazonaws.com"
+        }
+      }
+    }]
+  })
+}
+
+resource "aws_iam_role_policy" "terraform_access" {
+  name = "terraform-state-access"
+  role = aws_iam_role.github_actions.id
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "s3:ListBucket",
+          "s3:GetObject",
+          "s3:PutObject",
+          "s3:DeleteObject",
+          "dynamodb:GetItem",
+          "dynamodb:PutItem",
+          "dynamodb:DeleteItem",          
+          "ecr:*",
+          "iam:*",
+          "vpc:*",
+          "ec2:*",
+        ]
+        Resource = "*"
+      },
+
+      # Для KMS
+      {
+        Effect = "Allow"
+        Action = [
+          "kms:*",
+        ]
+        Resource = "*"
+      },  
+
+      # Для CloudWatch Logs
+      {
+        Effect = "Allow"
+        Action = [
+          "logs:*",
+        ]
+        Resource = "*"
+      }, 
+
+      # Для EKS
+      {
+        Effect = "Allow"
+        Action = [
+          "eks:*",
+        ]
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+output "role_arn" {
+  value = aws_iam_role.github_actions.arn
+}
