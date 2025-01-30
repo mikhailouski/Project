@@ -66,7 +66,7 @@ resource "aws_iam_role_policy" "terraform_access" {
           "dynamodb:DeleteItem",          
           "ecr:*",
           "iam:*",
-          "vpc:*"
+          "vpc:*",          
         ]
         Resource = "*"
       },
@@ -77,7 +77,8 @@ resource "aws_iam_role_policy" "terraform_access" {
           "kms:CreateKey",
           "kms:TagResource",
           "kms:DescribeKey",
-          "kms:ScheduleKeyDeletion"
+          "kms:ScheduleKeyDeletion",
+          "kms:CreateAlias",
         ]
         Resource = "*"
       },
@@ -88,7 +89,8 @@ resource "aws_iam_role_policy" "terraform_access" {
         Action = [
           "logs:CreateLogGroup",
           "logs:PutLogEvents",
-          "logs:DescribeLogGroups"
+          "logs:DescribeLogGroups",
+          "logs:TagResource",
         ]
         Resource = "arn:aws:logs:*:*:log-group:/aws/eks/*"
       },
@@ -107,7 +109,8 @@ resource "aws_iam_role_policy" "terraform_access" {
           "ec2:AttachInternetGateway",
           "ec2:CreateRouteTable",
           "ec2:CreateRoute",
-          "ec2:AssociateRouteTable"
+          "ec2:AssociateRouteTable",
+          "ec2:CreateTags",
         ]
         Resource = "*"
       },
