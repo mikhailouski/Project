@@ -10,10 +10,7 @@ module "eks" {
 
   eks_managed_node_group_defaults = {
     ami_type       = "AL2_x86_64"
-    instance_types = ["t3.micro"]
-    iam_role_additional_policies = {
-      AmazonEC2ContainerRegistryReadOnly = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
-    }
+    instance_types = ["t3.micro"]    
   }
   
   eks_managed_node_groups = {
@@ -23,7 +20,7 @@ module "eks" {
       desired_size = 2      
 
       tags = {
-        NodeGroup = "yuri-worker-node"
+        NodeGroup = "yuri-${var.environment}-worker-node"
       }    
     }
   }
