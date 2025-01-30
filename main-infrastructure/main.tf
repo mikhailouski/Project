@@ -12,7 +12,7 @@ provider "aws" {
 terraform {
   backend "s3" {
     bucket         = "yuri-tf-state-bucket"
-    key            = "main/${var.environment}/terraform.tfstate"
+    key            = "main/dev/terraform.tfstate"
     region         = "us-east-1"
     dynamodb_table = "yuri-terraform-locks"
     encrypt        = true
