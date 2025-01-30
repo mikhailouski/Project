@@ -22,13 +22,13 @@ resource "aws_dynamodb_table" "tf_locks" {
   }
 }
 
-resource "aws_iam_openid_connect_provider" "github" {
+resource "aws_iam_openid_connect_provider" "github_yuri" {
   url             = "https://token.actions.githubusercontent.com"
   client_id_list  = ["sts.amazonaws.com"]
   thumbprint_list = ["6938fd4d98bab03faadb97b34396831e3780aea1"]
 }
 
-resource "aws_iam_role" "github_actions" {
+resource "aws_iam_role" "github_actions_yuri" {
   name = "github-actions-role"
 
   assume_role_policy = jsonencode({
@@ -50,7 +50,7 @@ resource "aws_iam_role" "github_actions" {
 
 resource "aws_iam_role_policy" "terraform_access" {
   name = "terraform-state-access"
-  role = aws_iam_role.github_actions.id
+  role = aws_iam_role.github_actions_yuri.id
 
   policy = jsonencode({
     Version = "2012-10-17"
@@ -72,5 +72,5 @@ resource "aws_iam_role_policy" "terraform_access" {
 }
 
 output "role_arn" {
-  value = aws_iam_role.github_actions.arn
+  value = aws_iam_role.github_actions_yuri.arn
 }
