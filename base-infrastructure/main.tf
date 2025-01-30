@@ -1,5 +1,6 @@
 terraform {
   required_version = ">= 1.10.5"  
+  backend "local" {} 
 }
 
 provider "aws" {
@@ -21,7 +22,11 @@ resource "aws_dynamodb_table" "tf_locks" {
   }
 }
 
-resource "aws_iam_role" "github_actions_yuri" {
+data "aws_iam_openid_connect_provider" "github" {
+  url = "https://token.actions.githubusercontent.com"
+}
+
+resource "aws_iam_role" "github_actions" {
   name = "github-actions-role"
 
   assume_role_policy = jsonencode({
@@ -29,7 +34,7 @@ resource "aws_iam_role" "github_actions_yuri" {
     Statement = [{
       Effect = "Allow"
       Principal = {
-        Federated = "arn:aws:iam::443370672158:oidc-provider/token.actions.githubusercontent.com"
+        Federated = data.aws_iam_openid_connect_provider.github.arn
       }
       Action = "sts:AssumeRoleWithWebIdentity"
       Condition = {
@@ -44,7 +49,7 @@ resource "aws_iam_role" "github_actions_yuri" {
 
 resource "aws_iam_role_policy" "terraform_access" {
   name = "terraform-state-access"
-  role = aws_iam_role.github_actions_yuri.id
+  role = aws_iam_role.github_actions.id
 
   policy = jsonencode({
     Version = "2012-10-17"
@@ -71,5 +76,5 @@ resource "aws_iam_role_policy" "terraform_access" {
 }
 
 output "role_arn" {
-  value = aws_iam_role.github_actions_yuri.arn
+  value = aws_iam_role.github_actions.arn
 }
