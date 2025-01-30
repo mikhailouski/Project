@@ -36,7 +36,7 @@ resource "aws_iam_role" "github_actions_yuri" {
     Statement = [{
       Effect = "Allow"
       Principal = {
-        Federated = aws_iam_openid_connect_provider.github.arn
+        Federated = aws_iam_openid_connect_provider.github_yuri.arn
       }
       Action = "sts:AssumeRoleWithWebIdentity"
       Condition = {
